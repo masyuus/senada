@@ -1,0 +1,1 @@
+Taruh aset SVG asli proyek di folder ini: langit.svg, GnMerapi.svg, candi.svg, logo.svg, dan petaSleman.svg. Aset-aset tersebut belum tersedia pada unggahan awal, jadi tidak dibuat ulang atau diganti dengan placeholder.

@@ -1,0 +1,302 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+  background: #000;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  min-height: 500vh;
+  overflow-x: hidden;
+  background: #000;
+  color: #fff;
+}
+
+/* Kontainer utama tetap memenuhi layar saat halaman di-scroll. */
+.parallax-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  isolation: isolate;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* 1. Background langit */
+.img-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.08);
+}
+
+/* 2. Gunung Merapi */
+.img-merapi,
+.img-candi {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  max-width: none;
+  height: auto;
+  transform: translateX(-50%) scale(1.05);
+  will-change: opacity, transform;
+}
+
+/* 3. Candi */
+.img-candi {
+  opacity: 0;
+}
+
+/* 4. Logo */
+.img-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(500px, 76vw);
+  height: auto;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+  z-index: 10;
+}
+
+/* 5. Panel informasi */
+.panel-gulungan {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: 280px;
+  height: 60px;
+  padding: 24px;
+  overflow: hidden;
+  transform: translate(-50%, 0);
+  opacity: 0;
+  background: rgb(15 23 42 / 90%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgb(0 0 0 / 80%);
+  will-change: width, height, opacity, transform;
+  z-index: 9;
+}
+
+.panel-content {
+  opacity: 0;
+  text-align: center;
+  transition: opacity 0.3s ease-out;
+}
+
+.panel-content h1 {
+  margin-bottom: 12px;
+  color: #38bdf8;
+  font-size: 1.8rem;
+}
+
+.panel-content p {
+  color: #cbd5e1;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* 6. Peta Sleman */
+.map-layer {
+  z-index: 12;
+}
+
+.img-peta {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50vw;
+  max-width: 1100px;
+  height: auto;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  will-change: opacity, transform;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.img-peta svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.img-peta [data-kapanewon] {
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.2s ease;
+}
+
+.img-peta [data-kapanewon]:hover {
+  opacity: 0.75;
+}
+
+@media (max-width: 600px) {
+  .panel-gulungan {
+    top: 48%;
+    padding: 18px;
+  }
+
+  .panel-content h1 {
+    font-size: 1.25rem;
+  }
+
+  .panel-content p {
+    font-size: 0.9rem;
+  }
+
+  .img-peta {
+    width: 94vw;
+    max-height: 78vh;
+    object-fit: contain;
+  }
+
+  #peta {
+    width: min(80vw, 900px);
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+
+  #peta svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* Transisi pada setiap wilayah */
+  #peta.svg [data-wilayah] {
+    cursor: pointer;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      fill 250ms ease,
+      stroke 250ms ease,
+      stroke-width 250 ease,
+      filter 250ms ease,
+      transform 250ms ease;
+  }
+
+  /* efek saat kursor diarahkan */
+  #peta svg [data-wilayah]:hover {
+    filter: brightness(1.18) drop-shadow(0 0 5px #ffd16f);
+    transform: scale(1.025);
+  }
+
+  /* wilayah yang diplih */
+  #peta svg [data-wilayah].wilayah-terpilih {
+    filter:
+      brightness(1.15)
+      drop-shadow(0 0 4px #ffd166)
+     drop-shadow(0 0 10px #ff9f43);
+    transform: scale(1.035);
+  }
+  }
+
+   .popup-kapanewon {
+    position: fixed;
+    top: 50%;
+    right: 24px;
+    transform: translateY(-50%) translateX(20px);
+    width: 500px;
+    max-width: calc(100vw - 32px);
+    padding: 24px;
+    background: #fffaf2;
+    color: #352b24;
+    border: 1px solid #ead9c4;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    z-index: 1000;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: auto;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .popup-kapanewon.aktif {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(-50%) translateX(0);
+    }
+
+  .popup-tutup {
+    display: block;
+    margin-left: auto;
+    border: none;
+    background: transparent;
+    color: #6d6258;
+    font-size: 24px;
+    cursor: pointer;
+   }
+
+  .popup-label {
+  color: #b66a32;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1.2px;
+  }
+
+  .popup-kapanewon h2 {
+    margin: 10px 0;
+    font-size: 14px;
+  }
+
+  #deskripsiPopup{
+    color: #6d6258;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .btn-sanggar {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #e87532;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  @media (max-width: 600px) {
+    .popup-kapanewon{
+      top: auto;
+      bottom: 16px;
+      right: 16px;
+       transform: translateY(20px);
+    }
+
+    .popup-kapanewon.aktif {
+      transform: translateY(0);
+    }
+  }

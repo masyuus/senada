@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Prototipe multimedia interaktif Jelajah Budaya Sleman.">
+  <title>Jelajah Budaya Sleman</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <main class="parallax-container" id="parallaxContainer" aria-label="Pembuka Jelajah Budaya Sleman">
+    <!-- Layer 1: Langit -->
+    <div class="layer" data-depth="0.1" aria-hidden="true">
+      <img class="img-bg" src="assets/langit.svg" alt="">
+    </div>
+
+    <!-- Layer 2: Gunung Merapi -->
+    <div class="layer" data-depth="0.4" aria-hidden="true">
+      <img class="img-merapi" id="merapi" src="assets/GnMerapi.svg" alt="Gunung Merapi">
+    </div>
+
+    <!-- Layer 3: Candi -->
+    <div class="layer" data-depth="0.4" aria-hidden="true">
+      <img class="img-candi" id="candi" src="assets/candi.svg" alt="Ilustrasi candi">
+    </div>
+
+    <!-- Layer 4: Logo -->
+    <div class="layer" data-depth="0.8" aria-hidden="true">
+      <img class="img-logo" id="logo" src="assets/logo.svg" alt="Logo Jelajah Budaya Sleman">
+    </div>
+
+    <!-- Layer 5: Panel informasi -->
+    <section class="panel-gulungan" id="panel" aria-labelledby="panelTitle">
+      <div class="panel-content" id="panelContent">
+        <h1 id="panelTitle">Kawasan Candi &amp; Kebudayaan</h1>
+        <p>
+          Selamat datang di zona warisan sejarah. Peninggalan megah ini berdiri kokoh
+          di bawah naungan Gunung Merapi, menyimpan cerita dan kebudayaan yang abadi.
+        </p>
+      </div>
+    </section>
+
+    <!-- Layer 6: Peta Sleman. Tahap berikutnya: jadikan SVG peta interaktif per kapanewon. -->
+    <div class="layer map-layer" data-depth="0.2">
+      <div class="img-peta" id="peta" aria-label="Peta interaktif Kabupaten Sleman"></div>
+      <div class="popup-kapanewon" id="popupKapanewon">  
+        <button class="popup-tutup" id="tutupPopup" aria-label="Tutup popup"> &times;
+        </button>
+        <p class="popup-label">SENI BUDAYA SLEMAN SEMBADA</p>
+        <h2 id="namaPopup">Nama Kapanewon</h2>
+        <p id="deskripsiPopup">Jelajahi seni, sanggar, dan kekayaan budaya di wilayah ini.</p>
+
+        <button class="btn-sanggar" id="liharSanggar">Lihat Sanggar</button>
+
+      </div>
+    </div>
+  </main>
+</body>
+</html>
