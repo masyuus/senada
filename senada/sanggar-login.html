@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7f2">
+  <meta name="description" content="Login dan pendaftaran akun sanggar SENADA.">
+  <title>Login Sanggar | SENADA</title>
+  <link rel="stylesheet" href="css/sanggar-auth.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/sanggar-auth.js" defer></script>
+</head>
+<body>
+  <main class="auth-shell">
+    <a class="back-link" href="index.html">← Kembali ke SENADA</a>
+
+    <!-- Form login dan pendaftaran berbagi halaman; tab memilih form yang aktif. -->
+    <section class="auth-card" aria-labelledby="judulHalaman">
+      <a class="brand" href="index.html" aria-label="SENADA, kembali ke halaman utama">
+        <span class="brand-mark" aria-hidden="true">S</span>
+        <span><strong>SENADA</strong><small>Portal Sanggar</small></span>
+      </a>
+
+      <div id="authForms">
+        <div class="form-heading">
+          <p class="eyebrow">RUANG ADMIN SANGGAR</p>
+          <h1 id="judulHalaman">Login Sanggar</h1>
+          <p id="keteranganForm">Masuk untuk memantau akun dan pengajuan sanggar Anda.</p>
+        </div>
+
+        <div class="form-tabs" role="group" aria-label="Pilih login atau pendaftaran">
+          <button type="button" id="tabLogin" class="form-tab active" aria-pressed="true">Login</button>
+          <button type="button" id="tabDaftar" class="form-tab" aria-pressed="false">Daftar akun</button>
+        </div>
+
+        <!-- Akun masuk memakai kredensial Supabase Auth. -->
+        <form id="formLogin">
+          <label for="emailLogin">Email</label>
+          <input id="emailLogin" name="email" type="email" autocomplete="email" required>
+
+          <label for="passwordLogin">Password</label>
+          <div class="password-field">
+            <input id="passwordLogin" name="password" type="password" autocomplete="current-password" required>
+            <button class="password-toggle" type="button" aria-label="Lihat password" aria-controls="passwordLogin" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+                <path class="eye-slash" d="m3 3 18 18"></path>
+              </svg>
+            </button>
+          </div>
+
+          <button class="submit-button" type="submit">Login</button>
+          <button id="lupaPassword" class="forgot-password" type="button">Lupa password?</button>
+        </form>
+
+        <!-- Data sanggar menjadi metadata akun dan dipakai trigger untuk membuat pengajuan. -->
+        <form id="formDaftar" hidden>
+          <label for="namaSanggar">Nama sanggar</label>
+          <input id="namaSanggar" name="namaSanggar" type="text" maxlength="160" autocomplete="organization" required>
+
+          <label for="kapanewon">Kapanewon</label>
+          <select id="kapanewon" name="kapanewon" required>
+            <option value="">Pilih kapanewon</option>
+            <option>Berbah</option>
+            <option>Cangkringan</option>
+            <option>Depok</option>
+            <option>Gamping</option>
+            <option>Godean</option>
+            <option>Kalasan</option>
+            <option>Minggir</option>
+            <option>Mlati</option>
+            <option>Moyudan</option>
+            <option>Ngaglik</option>
+            <option>Ngemplak</option>
+            <option>Pakem</option>
+            <option>Prambanan</option>
+            <option>Seyegan</option>
+            <option>Sleman</option>
+            <option>Tempel</option>
+            <option>Turi</option>
+          </select>
+
+          <label for="emailDaftar">Email</label>
+          <input id="emailDaftar" name="email" type="email" autocomplete="email" required>
+
+          <label for="passwordDaftar">Password</label>
+          <div class="password-field">
+            <input id="passwordDaftar" name="password" type="password" minlength="8" autocomplete="new-password" required>
+            <button class="password-toggle" type="button" aria-label="Lihat password" aria-controls="passwordDaftar" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+                <path class="eye-slash" d="m3 3 18 18"></path>
+              </svg>
+            </button>
+          </div>
+          <small class="field-hint">Gunakan minimal 8 karakter.</small>
+
+          <label for="konfirmasiPassword">Ulangi password</label>
+          <div class="password-field">
+            <input id="konfirmasiPassword" name="konfirmasiPassword" type="password" minlength="8" autocomplete="new-password" required>
+            <button class="password-toggle" type="button" aria-label="Lihat password" aria-controls="konfirmasiPassword" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+                <path class="eye-slash" d="m3 3 18 18"></path>
+              </svg>
+            </button>
+          </div>
+
+          <button class="submit-button" type="submit">Daftar akun sanggar</button>
+          <p class="approval-note">Pengajuan profil akan ditinjau Dinas sebelum ditampilkan kepada publik.</p>
+        </form>
+
+        <!-- Form ini hanya dibuka setelah tautan reset Supabase mengembalikan pengguna. -->
+        <form id="formResetPassword" hidden>
+          <label for="passwordBaru">Password baru</label>
+          <div class="password-field">
+            <input id="passwordBaru" name="passwordBaru" type="password" minlength="8" autocomplete="new-password" required>
+            <button class="password-toggle" type="button" aria-label="Lihat password" aria-controls="passwordBaru" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+                <path class="eye-slash" d="m3 3 18 18"></path>
+              </svg>
+            </button>
+          </div>
+          <small class="field-hint">Gunakan minimal 8 karakter.</small>
+
+          <label for="konfirmasiPasswordBaru">Ulangi password baru</label>
+          <div class="password-field">
+            <input id="konfirmasiPasswordBaru" name="konfirmasiPasswordBaru" type="password" minlength="8" autocomplete="new-password" required>
+            <button class="password-toggle" type="button" aria-label="Lihat password" aria-controls="konfirmasiPasswordBaru" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+                <path class="eye-slash" d="m3 3 18 18"></path>
+              </svg>
+            </button>
+          </div>
+
+          <button class="submit-button" type="submit">Simpan password baru</button>
+        </form>
+      </div>
+
+      <!-- Status akun dimuat setelah login atau setelah password berhasil diatur ulang. -->
+      <section id="panelAkun" class="account-panel" aria-labelledby="judulAkun" hidden>
+        <p class="eyebrow">AKUN SANGGAR</p>
+        <h1 id="judulAkun">Status pengajuan</h1>
+        <p id="emailAkun" class="account-email"></p>
+        <div class="status-card">
+          <span>Status</span>
+          <strong id="statusPengajuan">Memuat...</strong>
+          <p id="detailPengajuan" aria-live="polite"></p>
+          <p id="catatanDinas" class="dinas-note" hidden></p>
+        </div>
+
+        <button id="tombolEditProfil" class="secondary-button" type="button" hidden>Edit profil sanggar</button>
+
+        <form id="formEditProfil" class="profile-form" hidden>
+          <label for="editNamaSanggar">Nama sanggar</label>
+          <input id="editNamaSanggar" type="text" maxlength="160" required>
+
+          <label for="editKapanewon">Kapanewon</label>
+          <select id="editKapanewon" required>
+            <option value="">Pilih kapanewon</option>
+            <option>Berbah</option><option>Cangkringan</option><option>Depok</option>
+            <option>Gamping</option><option>Godean</option><option>Kalasan</option>
+            <option>Minggir</option><option>Mlati</option><option>Moyudan</option>
+            <option>Ngaglik</option><option>Ngemplak</option><option>Pakem</option>
+            <option>Prambanan</option><option>Seyegan</option><option>Sleman</option>
+            <option>Tempel</option><option>Turi</option>
+          </select>
+
+          <label for="editJenisKesenian">Jenis kesenian</label>
+          <input id="editJenisKesenian" type="text" maxlength="160">
+
+          <label for="editDeskripsi">Deskripsi</label>
+          <textarea id="editDeskripsi" rows="4" maxlength="3000"></textarea>
+
+          <label for="editAlamat">Alamat</label>
+          <textarea id="editAlamat" rows="3" maxlength="500"></textarea>
+
+          <label for="editNomorWA">Nomor WhatsApp</label>
+          <input id="editNomorWA" type="tel" inputmode="tel" maxlength="30">
+
+          <label for="editFotoUrl">URL foto</label>
+          <input id="editFotoUrl" type="url" maxlength="2000">
+
+          <button id="tombolSimpanProfil" class="submit-button" type="submit">Simpan profil</button>
+          <button id="tombolBatalEdit" class="secondary-button" type="button">Batal</button>
+        </form>
+
+        <button id="tombolKeluar" class="secondary-button" type="button">Keluar</button>
+      </section>
+
+      <p id="pesanAuth" class="form-message" role="status" aria-live="polite"></p>
+      <p class="security-note">Password dikelola oleh Supabase Auth dan tidak disimpan di profil sanggar.</p>
+    </section>
+  </main>
+</body>
+</html>

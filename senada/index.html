@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- Metadata halaman dan berkas yang menjalankan tampilan interaktif. -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Prototipe multimedia interaktif Jelajah Budaya Sleman.">
+  <title>Seni Budaya Sleman Sembada</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Pustaka Supabase dipakai untuk mengambil data sanggar; main.js mengatur interaksi halaman. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"> </script>
+  <script src="js/main.js" defer></script>
+</head>
+
+<body>
+  <!-- Adegan pembuka dan peta publik berada dalam satu kanvas yang dianimasikan. -->
+  <!-- Wadah adegan utama yang layer-nya dianimasikan saat halaman di-scroll. -->
+  <main class="parallax-container" id="parallaxContainer" 
+        aria-label="Pembuka Jelajah Budaya Sleman">
+    <!-- Ilustrasi dekoratif; data-depth mengatur kecepatan gerak relatif tiap layer. -->
+    <!-- Layer 1: Langit -->
+    <div class="layer" data-depth="0.1" aria-hidden="true">
+      <img class="img-bg" src="assets/langit.svg" alt="">
+    </div>
+
+    <!-- Layer 2: Gunung Merapi -->
+    <div class="layer" data-depth="0.4" aria-hidden="true">
+      <img class="img-merapi" id="merapi" src="assets/GnMerapi.svg" alt="Gunung Merapi">
+    </div>
+
+    <!-- Layer 3: jathilan -->
+    <div class="layer" data-depth="0.4" aria-hidden="true">
+      <img class="img-jathilan" id="jathilan" src="assets/jathilan.svg" alt="Ilustrasi jathilan">
+    </div>
+
+    <!-- Layer 4: Logo -->
+    <div class="layer" data-depth="0.8" aria-hidden="true">
+      <img class="img-logo" id="logo" src="assets/logo.svg" alt="Logo Jelajah Budaya Sleman">
+    </div>
+
+    <!-- Layer 5: Panel informasi -->
+    <section class="panel-gulungan" id="panel" aria-labelledby="panelTitle">
+      <div class="panel-content" id="panelContent">
+        <h1 id="panelTitle">Seni Budaya Sleman Sembada</h1>
+        <p>
+          Selamat datang di SENADA! Jelajahi kekayaan seni dan budaya Kabupaten Sleman yang terus hidup dan dilestarikan dari generasi ke generasi. Mulai dari seni musik dan alat musik tradisional, seni teater, hingga berbagai ragam seni tari, setiap kesenian memiliki keunikan, cerita, dan nilai budaya tersendiri. Mari mengenal, mengeksplorasi, dan bersama-sama menjaga keberagaman kesenian Sleman agar tetap lestari.
+        </p>
+      </div>
+    </section>
+
+    <!-- main.js memuat SVG peta dan menjadikan setiap kapanewon dapat dipilih. -->
+    <div class="layer map-layer" data-depth="0.2">
+      <div class="panel-peta" id="panelPeta" aria-hidden="true"></div>
+      <div
+        class="img-peta"
+        id="peta"
+        role="group"
+        aria-label="Peta interaktif Kabupaten Sleman. Pilih kapanewon untuk melihat informasi."
+      ></div>
+    </div>
+
+    <!-- Popup ini menampilkan informasi wilayah dan daftar sanggar yang dipilih. -->
+    <div class="popup-kapanewon" id="popupKapanewon">
+      <button class="popup-tutup" id="tutupPopup" aria-label="Tutup popup"> &times;
+      </button>
+
+      <p class="popup-label">SENI BUDAYA SLEMAN SEMBADA</p>
+
+      <div class="popup-gambar">
+        <img
+          id="popupGambar"
+          src="assets/images/budaya-default.jpg"
+          alt="Ilustrasi budaya Sleman"
+        />
+      </div>
+
+      <h2 id="popupJudul">Nama Kapanewon</h2>
+      <p id="deskripsiPopup">
+        Jelajahi seni, sanggar, dan kekayaan budaya di Kapanewon ini. Temukan warisan budaya yang memukau dan nikmati pengalaman yang tak terlupakan.
+      </p>
+      <p id="jumlahSanggar" class="jumlah-sanggar">
+        memuat jumlah sanggar...
+      </p>
+
+      <button class="btn-sanggar" id="lihatSanggar">Lihat Sanggar</button>
+
+      <div id="daftarSanggar" class="daftar-sanggar" hidden>
+        <button
+          id="kembaliPopup"
+          class="btn-kembali"
+          type="button"
+          aria-label="Kembali ke informasi Kapanewon"
+          title="Kembali ke informasi Kapanewon"
+        >
+          ←
+        </button>
+
+        <div id="tampilanDaftarSanggar">
+          <h3>Daftar Sanggar Budaya</h3>
+          <p id="judulSanggar"></p>
+          <div id="isiDaftarSanggar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tampilan detail fullscreen untuk sanggar yang dipilih dari daftar. -->
+    <div id="detailSanggar" class="detail-sanggar-fullscreen" hidden>
+      <header class="header-detail-sanggar">
+        <button id="kembaliDaftarSanggar" class="btn-kembali" type="button">
+          Kembali ke daftar sanggar
+        </button>
+      </header>
+
+      <div class="konten-detail-sanggar">
+        <h1 id="detailNamaSanggar"></h1>
+
+        <!-- Foto disembunyikan oleh JavaScript jika data sanggar tidak memiliki foto. -->
+        <div class="detail-gambar">
+          <img id="detailFotoSanggar" src="" alt="Dokumentasi sanggar">
+        </div>
+
+        <!-- Nilai di bawah diisi dari data sanggar yang dipilih. -->
+        <section class="informasi-detail-sanggar">
+          <p id="detailJenisKesenian"></p>
+          <p id="detailDeskripsi"></p>
+          <p id="detailAlamat"></p>
+          <p id="detailNomorWA"></p>
+        </section>
+
+        <a id="detailTombolWA"
+          class="btn-whatsapp"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer">
+          Hubungi via Whatsapp
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Musik latar diputar atau dihentikan melalui tombol audio di bilah akses. -->
+  <audio id="backsound" loop preload="auto">
+    <source src="assets/audio/backsound.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Bilah akses tetap berisi identitas situs, tautan login, dan kontrol musik. -->
+  <div class="panel-aksi-cepat" role="group" aria-label="Akses cepat">
+    <div class="logoDinas">
+      <img id="logoDinas" src="assets/images/logoDinas.png" alt="Logo Dinas Kebudayaan">
+    </div>
+
+    <p class="judul-bilah">SENI BUDAYA SLEMAN SEMBADA</p>
+
+    <a class="tautan-login-sanggar" href="sanggar-login.html">Login Sanggar</a>
+
+    <div class="kontrol-audio">
+      <button id="tombolAudio" type="button" aria-label="Nyalakan musik" title="Nyalakan musik">
+        ♫
+      </button>
+    </div>
+  </div>
+
+<!-- Efek suara untuk interaksi tombol, pemilihan peta, dan pembukaan detail. -->
+<audio id ="soundKlik" src="assets/audio/klik-tombol.mp3" preload="auto"></audio>
+<audio id ="soundPeta" src="assets/audio/klik-peta.mp3" preload="auto"></audio>
+<audio id ="soundDetail" src="assets/audio/klik-detail.mp3" preload="auto"></audio>
+</body>
+</html>
